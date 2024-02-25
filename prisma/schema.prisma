@@ -6,3 +6,77 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum OperationTypes {
+  EXPENSE
+  ADDITION
+  GOAL
+}
+
+model User {
+  id       String @id() @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
+  Balance Balance[]
+
+  @@map("users")
+}
+
+model Balance {
+  id     String @id() @default(uuid())
+  amount Int    @default(0)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  Operation Operation[]
+
+  @@map("balances")
+}
+
+model Operation {
+  id         Int            @id @default(autoincrement())
+  amount     Int
+  balance    Balance        @relation(fields: [balanceId], references: [id])
+  balanceId  String
+  type       OperationTypes
+  category   Category       @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  @@map("operations")
+}
+
+model Category {
+  id               String         @id @default(uuid())
+  name             String
+  plannedAmount    Int
+  includedInBudget Boolean
+  type             OperationTypes
+  Operation        Operation[]
+
+  @@map("categories")
+}
+
+model Goal {
+  id            String          @id @default(uuid())
+  name          String
+  currentAmount Int
+  plannedAmount Int
+  operation     GoalOperation[]
+
+  @@map("goals")
+}
+
+model GoalOperation {
+  id        Int            @id @default(autoincrement())
+  amount    Int
+  balanceId String
+  type      OperationTypes
+
+  Goal   Goal?   @relation(fields: [goalId], references: [id])
+  goalId String?
+
+  @@map("goal_operations")
+}
