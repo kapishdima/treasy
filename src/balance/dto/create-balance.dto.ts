@@ -6,5 +6,5 @@ export class CreateBalanceDto {
 
   @IsOptional()
   @IsString()
-  userId: string;
+  userId?: string;
 }

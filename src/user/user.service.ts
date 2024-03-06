@@ -11,7 +11,11 @@ export class UserService {
     return this.prismaService.user.create({ data: createUserDto });
   }
 
-  async getUser(email: string) {
+  show(id: string) {
+    return this.prismaService.user.findFirst({ where: { id } });
+  }
+
+  getUser(email: string) {
     return this.prismaService.user.findFirst({ where: { email } });
   }
 }

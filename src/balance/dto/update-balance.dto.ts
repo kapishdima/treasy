@@ -4,9 +4,9 @@ import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class UpdateBalanceDto extends PartialType(CreateBalanceDto) {
   @IsInt()
-  amount: number;
+  amount?: number;
 
   @IsOptional()
   @IsString()
-  userId: string;
+  userId?: string;
 }

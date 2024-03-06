@@ -10,7 +10,7 @@ import {
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { ApiResource } from 'src/shared/http';
+import { CategoryResource } from './resource/category-resource';
 
 @Controller('categories')
 export class CategoryController {
@@ -25,14 +25,14 @@ export class CategoryController {
   async findAll() {
     const categories = await this.categoryService.findAll();
 
-    return new ApiResource(categories).toJson();
+    return CategoryResource.toArray(categories);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    const category = this.categoryService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const category = await this.categoryService.findOne(id);
 
-    return new ApiResource(category).toJson();
+    return CategoryResource.toObject(category);
   }
 
   @Patch(':id')

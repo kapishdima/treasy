@@ -1,3 +1,4 @@
 import { UserExistException } from './UserExistException';
+import { InvalidSortTypeException } from './InvalidSortTypeException';
 
-export { UserExistException };
+export { UserExistException, InvalidSortTypeException };

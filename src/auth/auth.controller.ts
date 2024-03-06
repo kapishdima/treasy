@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { ApiResource } from 'src/shared/http';
 
@@ -7,7 +7,9 @@ import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';
 import { REFRESH_TOKEN_COOKIE_NAME } from 'src/shared/constants';
 import { RefreshToken, User } from 'src/shared/decorators';
-import { User as UserModel } from 'src/user/models/user';
+import { UserResource } from 'src/user/resource/user-resource';
+import { AuthGuard } from './auth.guard';
+import { AuthResource } from './resource/auth-resource';
 
 @Controller('auth')
 export class AuthController {
@@ -25,22 +27,19 @@ export class AuthController {
       REFRESH_TOKEN_COOKIE_NAME,
     );
 
-    return new ApiResource({ accessToken }).toJson();
+    return AuthResource.toObject(accessToken);
   }
 
   @Post('/sign-up')
   async signUp(@Body() createUserDto: CreateUserDto) {
-    console.log('BODY', createUserDto);
-    const user = await this.authService.signUp(createUserDto);
-
-    return new ApiResource(user).toJson();
+    return this.authService.signUp(createUserDto);
   }
 
   @Post('/logout')
   async logout(@User() userId: string) {
     await this.authService.logout(userId);
 
-    return new ApiResource(null).toJson();
+    return;
   }
 
   @Get('/refresh')
@@ -55,6 +54,14 @@ export class AuthController {
       REFRESH_TOKEN_COOKIE_NAME,
     );
 
-    return new ApiResource({ accessToken: newAccessToken }).toJson();
+    return AuthResource.toObject(newAccessToken);
+  }
+
+  @Get('/me')
+  @UseGuards(AuthGuard)
+  async getMe(@User() userId: string) {
+    const user = await this.authService.getCurrentUser(userId);
+
+    return UserResource.toObject(user);
   }
 }

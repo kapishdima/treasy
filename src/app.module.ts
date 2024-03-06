@@ -9,6 +9,7 @@ import { GoalOperationModule } from './goal_operation/goal_operation.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TokensModule } from './tokens/tokens.module';
+import { MoneyModule } from './money/money.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TokensModule } from './tokens/tokens.module';
     GoalOperationModule,
     AuthModule,
     TokensModule,
+    MoneyModule,
   ],
   controllers: [],
   providers: [AppService],

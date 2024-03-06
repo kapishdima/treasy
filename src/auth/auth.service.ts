@@ -8,7 +8,6 @@ import { TokensService } from 'src/tokens/tokens.service';
 
 import { LoginDto } from './dto/login.dto';
 import { UserJwtPayload } from './models/jwt-payload';
-import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -80,5 +79,9 @@ export class AuthService {
     );
 
     return { newAccessToken, newRefreshToken };
+  }
+
+  async getCurrentUser(userId: string) {
+    return this.userService.show(userId);
   }
 }
